@@ -2,7 +2,7 @@
 
 Full-stack Electron - React desktop app for high-frequency industrial data logging &amp; control of a simulated Motor Control Unit (MCU) using Node.js/MySQL. Successfully delivered core features while proactively identifying critical performance bottlenecks (memory saturation, scalability) and detailing a robust optimization plan.
 
-# ⚙️ Galaxi Motor Tuning Software (NDA-Safe Portfolio Version)
+# ⚙️ Motor Tuning Software (NDA-Safe Portfolio Version)
 
 This repository presents a **mock / NDA-safe version** of a complex desktop application I developed during my professional experience in the automotive technology sector. This project demonstrates end-to-end expertise across the full stack, focusing on industrial communication, high-frequency data management, and desktop application development.
 
