@@ -1,83 +1,52 @@
-# ⬇️ Local Installation Guide (NDA-Safe Mockup)
+# Motor tuning Software - Embedded Control Desktop Interface (V.2) - Installation Guide
 
-This guide provides the steps required to set up and run the portfolio-ready, mock version of the **Embedded System Control Application**.
+This guide provides instructions for installing and running the Embedded Control Desktop Interface (`.exe` version) on a Windows machine.
 
-**Note:** This version simulates the full application stack (Frontend, Backend, Database) and **does not require actual physical hardware** or proprietary drivers to run.
-
----
+## Project Information (NDA-SAFE)
+* **Product:** Motor tuning Software - Embedded Control Desktop Interface (V.2)
 
 ## Prerequisites
 
-Before starting, ensure you have the following software installed:
+* A Windows PC (Laptop or Desktop).
+* [CAN Interface Type] Interface hardware and Motor Control Unit hardware.
 
-1.  **Node.js:** (LTS version recommended)
-2.  **Git:** To clone this repository.
-3.  **MySQL Server:** To host the application's local database.
-4.  **MySQL Workbench or equivalent client:** For database restoration and management.
-5.  **PCAN Driver:** (Optional, but recommended for realism) Installing the official driver demonstrates familiarity with the required industrial setup, though it is not needed to run the mock code.
-    * *Download Link:* [PCAN Driver Download](https://www.peak-system.com/PCAN-View.242.0.html)
+## Installation Steps (Using Pre-Built Executable)
 
----
+### Step 1: Install Database Management System
 
-## Setup Steps
+The application relies on a local database (originally MySQL, but SQLite is used in source code) for data logging and retrieval.
 
-### Step 1: Clone the Repository
+1.  Download and install your chosen local DBMS (e.g., MySQL Server/Workbench for the bundled version).
+2.  During installation, set the required administrative password as: `[SECURE_DEFAULT_PASSWORD]`
+3.  **Database Installation Guide:** [LINK TO INTERNAL/PUBLIC DBMS INSTALLATION GUIDE]
 
-Clone this project repository to your local machine:
+### Step 2: Restore the Database
 
-```bash
-git clone [YOUR-REPOSITORY-URL] Motor-Tuning-Desktop-App-Version-1
-cd Motor-Tuning-Desktop-App-Version-1
-```
+The application requires the initial database structure and data to function.
 
-### Step 2: Database Setup
+1.  **Download the database backup file:** [LINK TO SECURE DATABASE BACKUP LOCATION]
+2.  Use your DBMS tool to restore the downloaded database backup file.
 
-1. **Initialize MySQL:** Start your local MySQL server.
-2. **Create Database:** Use MySQL Workbench or the command line to create a new, empty database (e.g., `create database mock_mcu_db;`).
-3. **Restore Schema and Data:**
-   * Navigate to `src/database/` in this repository.
-   * Run the provided schema (`schema.sql`) and sample data scripts using MySQL Workbench to set up the tables and populate mock data.
+### Step 3: Extract and Locate the Application Executable
 
-### Step 3: Install Backend Dependencies
+The main application is provided as a pre-built executable file.
 
-The backend handles the API logic and database communication.
+1.  **Download the application ZIP file:** [LINK TO SECURE APPLICATION EXECUTABLE LOCATION]
+2.  Unzip (Extract) the downloaded file.
+3.  Navigate to the extracted directory to find the main application file:
+    * `\[app-folder-name]\mcuapp.exe`
 
-```bash
-cd src/backend
-npm install
-```
+### Step 4: Install Embedded Device Driver
 
-### Step 4: Install Frontend/Electron Dependencies
+The application requires the specific device driver (e.g., PCAN Driver) to communicate with the embedded Motor Control Unit.
 
-The frontend uses React and Electron to build the desktop UI.
+1.  **Download the required Driver:** [LINK TO SECURE DRIVER DOWNLOAD PAGE]
+2.  Install the driver according to the provided instructions.
 
-```bash
-cd ../frontend
-npm install
-```
+### Step 5: Connect Hardware and Run Application
 
-### Step 5: Run the Application
+1.  Connect your **[CAN Interface Type] interface** to your PC and the **Motor Control Unit hardware**.
+2.  Launch the application by double-clicking the executable:
+    * `\[app-folder-name]\mcuapp.exe`
 
-The application requires the backend server and the Electron frontend to run concurrently.
-
-**Start the Backend API (First Terminal):**
-
-```bash
-cd src/backend
-node server.js
-```
-
-*(Wait for the console to confirm the API is running on the local port, e.g., `Mock Backend API running on port 3001`)*
-
-**Start the Electron Frontend (Second Terminal):**
-
-```bash
-cd src/frontend
-npm start
-```
-
-*(This command starts the Electron application, and the desktop window should appear.)*
-
-### Step 6: Verify Functionality
-
-If the setup is correct, the application window will open, and the UI will begin polling the local backend API and displaying mock data, successfully simulating a connected system.
+The application will now communicate with the embedded device and begin its data logging process.

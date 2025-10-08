@@ -1,25 +1,16 @@
--- FILE: src/database/schema.sql
+-- database_schema.sql (for SQLite)
 
--- NDA-SAFE MOCK CODE: This is a simplified schema reference, NOT the actual project database structure.
-
--- Table to log high-frequency CAN messages (e.g., 8 times per second)
-CREATE TABLE IF NOT EXISTS can_log (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    timestamp DATETIME NOT NULL,
-    can_id VARCHAR(10) NOT NULL,
-    data_value DECIMAL(10, 4) NOT NULL,
-    status_code INT
+-- Table to store high-frequency CAN data logs
+-- NOTE: Frequent inserts to this table (8/sec) are the source of the storage issues.
+CREATE TABLE IF NOT EXISTS device_data_logs (
+    log_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    log_timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
+    can_identifier TEXT NOT NULL,  -- The identifier for the CAN message (e.g., '0x1A0')
+    metric_a REAL,                -- Corresponds to Motor Speed
+    metric_b REAL,                -- Corresponds to Motor Temperature
+    metric_c REAL,                -- Corresponds to Battery Voltage
+    raw_can_frame TEXT            -- Stores the raw CAN message data
 );
 
--- Table for system configuration settings and calibration values
-CREATE TABLE IF NOT EXISTS system_config (
-    setting_key VARCHAR(50) PRIMARY KEY,
-    setting_value VARCHAR(255)
-);
-
--- Insert mock configuration data
-INSERT INTO system_config (setting_key, setting_value) VALUES
-('app_version', 'V1.0.0-MOCK'),
-('log_frequency_hz', '8');
-
--- Mock data insertion can be done via separate script to populate the database
+-- Note: The schema design reflects the functional requirement of logging multiple metrics
+-- per CAN message frequency, which leads to the identified scalability issues.

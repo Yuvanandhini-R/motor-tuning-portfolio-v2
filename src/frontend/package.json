@@ -1,21 +1,29 @@
 {
-  "name": "mcu-app-frontend-mock",
-  "version": "1.0.0",
-  "description": "Mock Electron/React frontend structure for portfolio reference.",
+  "name": "embedded-control-interface",
+  "version": "2.0.0",
+  "description": "Embedded Control Desktop Interface (V.2)",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
-    "react-start": "react-scripts start"
+    "dev-backend": "nodemon backend/server.js",
+    "package": "electron-packager . --overwrite --asar --platform=win32 --arch=x64 --out=dist"
   },
+  "keywords": [
+    "electron",
+    "node",
+    "embedded",
+    "can"
+  ],
+  "author": "[]",
+  "license": "UNLICENSED",
   "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "axios": "^1.6.8",
-    "plotly.js": "^2.30.1",
-    "react-scripts": "5.0.1"
+    "electron": "^28.2.0",
+    "express": "^4.18.2",
+    "sqlite3": "^5.1.7",
+    "cors": "^2.8.5"
   },
   "devDependencies": {
-    "electron": "^29.1.5"
-  },
-  "keywords": ["electron", "react", "mock", "portfolio"]
+    "electron-packager": "^17.1.2",
+    "nodemon": "^3.0.3"
+  }
 }

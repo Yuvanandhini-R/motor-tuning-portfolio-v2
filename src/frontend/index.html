@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Motor tuning software embedded Control Interface</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <h1>Motor tuning software Desktop Application</h1>
+        <p>Embedded Control Interface (V.2)</p>
+    </header>
+
+    <main>
+        <section id="live-data">
+            <h2>Live Device Telemetry</h2>
+            <div id="data-display-container">
+                </div>
+        </section>
+
+        <section id="controls">
+            <h2>Control & Logging</h2>
+            <button id="export-log-btn">Export Data Log (CSV)</button>
+            <p id="status-message">Application running smoothly. Logging status: Active.</p>
+        </section>
+        
+        <section id="tech-stack-info">
+            <h2>Project Status</h2>
+            <p><strong>Status:</strong> Completed (Design Phase)</p>
+            <p><strong>Tech Stack:</strong> Electron, Node.js, Express.js, SQLite</p>
+            <p class="con-note">ISSUE WARNING: Application exhibits high processing load and memory usage (8Hz logging) leading to potential storage/scalability issues (as noted in project brief).</p>
+        </section>
+    </main>
+
+    <footer>
+       
+    </footer>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
