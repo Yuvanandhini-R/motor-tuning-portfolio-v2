@@ -99,7 +99,9 @@ motor-tuning-portfolio-v2/
 └─ README.md
 ```
 ---
-# ⚙️ System Architecture Diagram (Component View)
+# ⚙️ System Architecture & Data Flow Diagram (DFD)
+
+## 1. System Architecture Diagram (Component View)
 
 The architecture is a hybrid desktop application packaged by Electron, utilizing a standard three-tier local service model connected to embedded hardware.
 
@@ -109,36 +111,39 @@ The architecture is a hybrid desktop application packaged by Electron, utilizing
 | :--- | :--- | :--- |
 | **External Hardware** | Motor Control Unit (MCU), CAN Bus | The source of high-frequency data (Telemetry). |
 | **Hardware Interface** | PCAN Driver (Native C/C++) | Low-level driver for OS-to-CAN communication. |
-| **Desktop Wrapper** | **Electron** | Packages and runs both the Node.js Backend (Main Process) and the Frontend (Renderer Process) for the **Motor Tuning Software V2**. |
-| **Application Layer (Backend)** | **Node.js / Express.js** | The core business logic. Manages the PCAN interface, runs the local REST API (`http://localhost:3000`), and executes the high-frequency data processing/logging loop. |
-| **Data Layer** | **SQLite Database** | Local persistent storage for all raw and processed device logs (the storage is rapidly consumed due to 8Hz writes). |
-| **Presentation Layer (Frontend)**| **HTML, CSS, JavaScript** | The User Interface. Communicates with the local Express API to display live data and trigger exports. |
+| **Desktop Wrapper** | **Electron** | Packages and runs both the Node.js Backend and the Frontend for the **Motor Tuning Software V2**. |
+| **Application Layer (Backend)** | **Node.js / Express.js** | Manages the PCAN interface, runs the local REST API, and executes the 8Hz processing/logging loop. |
+| **Data Layer** | **SQLite Database** | Local persistent storage for all logs (rapidly consumed due to 8Hz writes). |
+| **Presentation Layer (Frontend)**| **HTML, CSS, JavaScript** | The User Interface. Communicates with the local Express API. |
 
-### 1.2 Component Interaction Flow
+### 1.2 Component Interaction Flow (Plain ASCII)
 
 The flow illustrates the chain of communication from hardware to the user interface:
 
-```mermaid
-graph TD
-    A[Motor Control Unit] --> B(CAN Bus);
-    B --> C(PCAN Driver);
-    C -->|Native IPC / Bindings| D(Node.js Backend);
-    D -->|Local REST API / HTTP| E(Electron Frontend);
-    E --> F[User Interface];
-    D -.->|SQLite Connection| G(Local Storage / DB File);
+**Data Flow**
 
-    style A fill:#f9f,stroke:#333
-    style D fill:#ccf,stroke:#333
-    style E fill:#eef,stroke:#333
-
+<pre>
+[Motor Control Unit] <--> [CAN Bus]
+          |
+          v
+[PCAN Driver]
+          | (Native Bindings)
+          v
+[Node.js Backend] <--> [SQLite Database]
+          |
+          v (Local REST API / HTTP)
+[Electron Frontend]
+          |
+          v
+[User Interface]
+</pre>
 ---
-# Data Flow Diagram (DFD)
 
-This Data Flow Diagram details the movement of data through the **Motor Tuning Software V2** system, particularly highlighting the high-frequency logging mechanism.
+## 2. Data Flow Diagram (DFD)
 
-## 1. Level 0: Context Diagram
+This diagram details the movement of data through the **Motor Tuning Software V2** system.
 
-This shows the system as a single process interacting with its external environment.
+### 2.1 Level 0: Context Diagram
 
 | External Entity | Data Sent In | Data Sent Out |
 | :--- | :--- | :--- |
@@ -146,43 +151,28 @@ This shows the system as a single process interacting with its external environm
 | **Embedded Device** | High-Frequency CAN Messages | - |
 | **Local File System**| - | Data Logs (CSV File) |
 
-**Flow:**
+### 2.2 Level 1: Detailed DFD (Logging and Export Paths)
 
-1.  **Embedded Device** $\xrightarrow{\text{8Hz CAN Messages}}$ **Motor Tuning Software V2 Desktop App**
-2.  **User** $\xrightarrow{\text{Configuration/Commands}}$ **Motor Tuning Software V2 Desktop App**
-3.  **Motor Tuning Software V2 Desktop App** $\xrightarrow{\text{Live Telemetry Display}}$ **User**
-4.  **Motor Tuning Software V2 Desktop App** $\xrightarrow{\text{Data Logs (CSV)}}$ **Local File System**
+#### Processes:
 
----
+* **P1:** CAN Acquisition & Processing
+* **P2:** Data Logging Service
+* **P3:** UI & API Management
+* **P4:** Data Export
+* **D1:** Log Database (SQLite)
 
-## 2. Level 1: Detailed DFD (Logging and Export Paths)
+#### Data Flow Path:
 
-This diagram details the core processes and the local data store, illustrating the path of a CAN message from acquisition to logging and user presentation.
-
-### Processes:
-
-* **P1 (CAN Acquisition & Processing):** Reads and parses raw frames (8Hz cycle).
-* **P2 (Data Logging Service):** Handles SQL `INSERT` operations at the high frequency (8/sec) into the local database.
-* **P3 (UI & API Management):** The Express service that exposes data to the Frontend and handles user requests (like Export).
-* **P4 (Data Export):** Retrieves all logs from the database and converts the data into CSV format for file export.
-
-### Data Store:
-
-* **D1 (Log Database - SQLite):** Persistent storage for all collected telemetry data.
-
-### Data Flow Path:
-
-1.  **Embedded Device** $\xrightarrow{\text{Raw CAN Frames (8Hz)}} \text{P1 (Acquisition)}$
-2.  **P1** $\xrightarrow{\text{Live Data Cache}} \text{P3 (API Management)}$
-3.  **P1** $\xrightarrow{\text{Processed Log Entry (8Hz)}} \text{P2 (Logging Service)}$
-4.  **P2** $\xrightarrow{\text{SQL INSERT}} \text{D1 (Log Database)}$
+1.  **Embedded Device ---[Raw CAN Frames (8Hz)]--> P1**
+2.  **P1 ---[Live Data Cache]--> P3**
+3.  **P1 ---[Processed Log Entry (8Hz)]--> P2**
+4.  **P2 ---[SQL INSERT]--> D1 (Log Database)**
     * ***PERFORMANCE BOTTLENECK:*** *The extreme frequency of this step leads to high CPU/RAM usage and rapid local disk storage consumption.*
-5.  **User** $\xrightarrow{\text{Request Live View}} \text{P3}$
-6.  **P3** $\xrightarrow{\text{Live Telemetry Data}} \text{User}$
-7.  **User** $\xrightarrow{\text{Request Export}} \text{P3}$
-8.  **P3** $\xrightarrow{\text{Export Command}} \text{P4 (Data Export)}$
-9.  **P4** $\xrightarrow{\text{SELECT All Logs}} \text{D1}$
-10. **P4** $\xrightarrow{\text{CSV File}} \text{Local File System} \xrightarrow{\text{Download}} \text{User}$
+5.  **User ---[Request Live View]--> P3 ---[Live Telemetry Data]--> User**
+6.  **User ---[Request Export]--> P3**
+7.  **P3 ---[Export Command]--> P4 (Data Export)**
+8.  **P4 ---[SELECT All Logs]--> D1**
+9.  **P4 ---[CSV File]--> Local File System ---[Download]--> User**
 
 ---
 
