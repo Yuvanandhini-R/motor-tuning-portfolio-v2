@@ -1,4 +1,21 @@
 {
-  "name": "motor-tuning-frontend",
-  "version": "1.0.0"
+  "name": "mcu-app-frontend-mock",
+  "version": "1.0.0",
+  "description": "Mock Electron/React frontend structure for portfolio reference.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "react-start": "react-scripts start"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "axios": "^1.6.8",
+    "plotly.js": "^2.30.1",
+    "react-scripts": "5.0.1"
+  },
+  "devDependencies": {
+    "electron": "^29.1.5"
+  },
+  "keywords": ["electron", "react", "mock", "portfolio"]
 }
