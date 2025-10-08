@@ -73,28 +73,33 @@ The core performance challenges identified in V.1 remained the focus for optimiz
 
 This structure reflects the V.2 architecture, featuring the lightweight, serverless database file:
 
-motor-tuning-portfolio-v2/
+## Project Structure
+
+```
+galaxi-motor-tuning-portfolio/
 │
 ├─ src/
 │   ├─ frontend/         # Electron + React application interface
 │   ├─ backend/          # Node.js + Express REST API server
-│   └─ database/         # SQLite database file (.db) and initialization scripts
+│   └─ database/         #SQLITE schema definition and sample data scripts
 │
 ├─ tests/
-│   └─ api-tests/        # Postman or Insomnia collection
+│   └─ api-tests/        # Postman or Insomnia API testing collections
 │
 ├─ diagrams/
 │   ├─ system_architecture.png
 │   └─ data_flow.png
 │
+├─ mockups/
+│   └─ *.png files       # All application mockup screenshots (NDA-safe)
+│
 ├─ docs/
-│   └─ installation.md   # Simplified instructions to run locally
+│   └─ installation.md   # Simplified instructions to run the mock environment
 │
 └─ README.md
-
+```
 
 ---
-
 ### ⭐ Skills Demonstrated in V.2
 
 * **Architectural Refactoring:** Successful migration from a server-based DB (MySQL) to an embedded DB (SQLite).
