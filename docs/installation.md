@@ -26,8 +26,8 @@ Before starting, ensure you have the following software installed:
 Clone this project repository to your local machine:
 
 ```bash
-git clone [YOUR-REPOSITORY-URL] galaxi-motor-tuning-portfolio
-cd galaxi-motor-tuning-portfolio
+git clone [YOUR-REPOSITORY-URL] Motor-Tuning-Desktop-App-Version-1
+cd Motor-Tuning-Desktop-App-Version-1
 ```
 
 ### Step 2: Database Setup
